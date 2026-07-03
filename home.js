@@ -2,8 +2,11 @@ const SESSION_KEY = "odishapulse_session";
 const REMEMBER_KEY = "odishapulse_remembered";
 const EMAIL_KEY = "odishapulse_email";
 
-if (sessionStorage.getItem(SESSION_KEY) !== "true" && localStorage.getItem(REMEMBER_KEY) !== "true") {
-  window.location.href = "login.html";
+if (
+  sessionStorage.getItem(SESSION_KEY) !== "true" &&
+  localStorage.getItem(REMEMBER_KEY) !== "true"
+) {
+  window.location.href = "index.html";
 }
 
 const SEVERITY_COLORS = {
@@ -18,10 +21,10 @@ const DEFAULT_ZOOM = 7;
 
 let map = null;
 let markersLayer = null;
-let allRecords = []; 
-let currentMarkers = []; 
-let currentFilteredRecords = []; 
-let selectedRecordId = null; 
+let allRecords = [];
+let currentMarkers = [];
+let currentFilteredRecords = [];
+let selectedRecordId = null;
 
 const HEADER_CANDIDATES = {
   latitude: ["latitude", "lat", "lattitude"], // "lattitude" covers a common misspelling
@@ -41,11 +44,16 @@ const HEADER_CANDIDATES = {
 };
 
 function normalizeHeader(str) {
-  return String(str).toLowerCase().replace(/[^a-z0-9]/g, "");
+  return String(str)
+    .toLowerCase()
+    .replace(/[^a-z0-9]/g, "");
 }
 
 function findHeader(fields, candidates) {
-  const normalizedFields = fields.map((f) => ({ original: f, norm: normalizeHeader(f) }));
+  const normalizedFields = fields.map((f) => ({
+    original: f,
+    norm: normalizeHeader(f),
+  }));
   for (const candidate of candidates) {
     const match = normalizedFields.find((f) => f.norm === candidate);
     if (match) return match.original;
@@ -117,7 +125,7 @@ document.addEventListener("DOMContentLoaded", () => {
     sessionStorage.removeItem(SESSION_KEY);
     localStorage.removeItem(REMEMBER_KEY);
     localStorage.removeItem(EMAIL_KEY);
-    window.location.href = "login.html";
+    window.location.href = "index.html";
   });
 });
 
@@ -143,14 +151,14 @@ function setupUploadZone() {
     uploadZone.addEventListener(evt, (e) => {
       e.preventDefault();
       uploadZone.classList.add("dragover");
-    })
+    }),
   );
 
   ["dragleave", "drop"].forEach((evt) =>
     uploadZone.addEventListener(evt, (e) => {
       e.preventDefault();
       uploadZone.classList.remove("dragover");
-    })
+    }),
   );
 
   uploadZone.addEventListener("drop", (e) => {
@@ -166,13 +174,16 @@ function setupUploadZone() {
 
 function handleFile(file) {
   if (!file.name.toLowerCase().endsWith(".csv")) {
-    showUploadError("That doesn't look like a CSV file. Please upload a .csv file.");
+    showUploadError(
+      "That doesn't look like a CSV file. Please upload a .csv file.",
+    );
     return;
   }
 
   const reader = new FileReader();
   reader.onload = () => parseCsvText(reader.result, file.name);
-  reader.onerror = () => showUploadError("Couldn't read that file. Please try again.");
+  reader.onerror = () =>
+    showUploadError("Couldn't read that file. Please try again.");
   reader.readAsText(file);
 }
 
@@ -193,7 +204,7 @@ function parseCsvText(text, filename) {
 
   if (!latKey || !lngKey) {
     showUploadError(
-      "Couldn't find latitude/longitude columns. Expected headers like \"Latitude\" and \"Longitude\"."
+      'Couldn\'t find latitude/longitude columns. Expected headers like "Latitude" and "Longitude".',
     );
     return;
   }
@@ -208,7 +219,14 @@ function parseCsvText(text, filename) {
     const lat = parseFloat(row[latKey]);
     const lng = parseFloat(row[lngKey]);
 
-    if (Number.isNaN(lat) || Number.isNaN(lng) || lat < -90 || lat > 90 || lng < -180 || lng > 180) {
+    if (
+      Number.isNaN(lat) ||
+      Number.isNaN(lng) ||
+      lat < -90 ||
+      lat > 90 ||
+      lng < -180 ||
+      lng > 180
+    ) {
       skipped++;
       return;
     }
@@ -216,7 +234,9 @@ function parseCsvText(text, filename) {
     records.push({
       id: i,
       name: nameKey && row[nameKey] ? row[nameKey].trim() : `Customer ${i + 1}`,
-      amount: amountKey ? parseFloat(String(row[amountKey]).replace(/[^0-9.-]/g, "")) : null,
+      amount: amountKey
+        ? parseFloat(String(row[amountKey]).replace(/[^0-9.-]/g, ""))
+        : null,
       latitude: lat,
       longitude: lng,
     });
@@ -238,8 +258,11 @@ function parseCsvText(text, filename) {
   dom.filename.textContent = filename;
 
   let note = `Plotted ${records.length} of ${result.data.length} rows.`;
-  if (skipped > 0) note += ` ${skipped} row${skipped === 1 ? "" : "s"} skipped (invalid or missing coordinates).`;
-  if (!amountKey) note += " No pending-amount column found, so markers aren't severity-colored.";
+  if (skipped > 0)
+    note += ` ${skipped} row${skipped === 1 ? "" : "s"} skipped (invalid or missing coordinates).`;
+  if (!amountKey)
+    note +=
+      " No pending-amount column found, so markers aren't severity-colored.";
   dom.uploadNote.textContent = note;
   dom.uploadNote.classList.remove("is-error");
 
@@ -290,7 +313,8 @@ function resetDashboard() {
   map.setView(DEFAULT_CENTER, DEFAULT_ZOOM);
   dom.mapEmpty.hidden = false;
 
-  dom.customerList.innerHTML = '<p class="list-empty" id="list-empty">No data yet — upload a CSV to get started.</p>';
+  dom.customerList.innerHTML =
+    '<p class="list-empty" id="list-empty">No data yet — upload a CSV to get started.</p>';
 }
 
 function classifySeverity(records) {
@@ -322,7 +346,6 @@ function classifySeverity(records) {
     }
   });
 }
-
 
 function assignRegions(records) {
   if (records.length === 0) return;
@@ -385,7 +408,10 @@ function setupSampleDownload() {
 }
 
 function initMap() {
-  map = L.map("map", { attributionControl: true }).setView(DEFAULT_CENTER, DEFAULT_ZOOM);
+  map = L.map("map", { attributionControl: true }).setView(
+    DEFAULT_CENTER,
+    DEFAULT_ZOOM,
+  );
 
   L.tileLayer(
     "https://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}",
@@ -393,7 +419,7 @@ function initMap() {
       attribution: "Esri, HERE, Garmin &copy; OpenStreetMap contributors",
       maxZoom: 16,
       maxNativeZoom: 16,
-    }
+    },
   ).addTo(map);
 
   L.tileLayer(
@@ -401,7 +427,7 @@ function initMap() {
     {
       maxZoom: 16,
       maxNativeZoom: 16,
-    }
+    },
   ).addTo(map);
 
   markersLayer = L.layerGroup().addTo(map);
@@ -436,7 +462,7 @@ function renderMarkers(records) {
       `<strong>${escapeHtml(r.name)}</strong><br/>` +
         `Region: ${escapeHtml(r.region)}<br/>` +
         `Pending: ${amountText}<br/>` +
-        `<span style="color:var(--mist-dim)">${r.latitude.toFixed(4)}, ${r.longitude.toFixed(4)}</span>`
+        `<span style="color:var(--mist-dim)">${r.latitude.toFixed(4)}, ${r.longitude.toFixed(4)}</span>`,
     );
 
     marker.on("click", () => selectRecord(r.id));
@@ -446,7 +472,9 @@ function renderMarkers(records) {
   });
 
   if (records.length > 0) {
-    const bounds = L.latLngBounds(records.map((r) => [r.latitude, r.longitude]));
+    const bounds = L.latLngBounds(
+      records.map((r) => [r.latitude, r.longitude]),
+    );
     map.fitBounds(bounds, { padding: [40, 40], maxZoom: 11 });
     dom.mapEmpty.hidden = true;
   } else {
@@ -462,8 +490,8 @@ function escapeHtml(str) {
 }
 
 function populateRegionFilter(records) {
-  const regions = Array.from(new Set(records.map((r) => r.region))).sort((a, b) =>
-    a.localeCompare(b)
+  const regions = Array.from(new Set(records.map((r) => r.region))).sort(
+    (a, b) => a.localeCompare(b),
   );
 
   dom.regionFilter.innerHTML = '<option value="all">All regions</option>';
@@ -481,16 +509,26 @@ function applyFilter() {
   const sortOrder = dom.amountSort.value; // "none" | "asc" | "desc"
 
   let filtered =
-    regionValue === "all" ? allRecords.slice() : allRecords.filter((r) => r.region === regionValue);
+    regionValue === "all"
+      ? allRecords.slice()
+      : allRecords.filter((r) => r.region === regionValue);
 
   if (searchTerm) {
-    filtered = filtered.filter((r) => r.name.toLowerCase().includes(searchTerm));
+    filtered = filtered.filter((r) =>
+      r.name.toLowerCase().includes(searchTerm),
+    );
   }
 
   if (sortOrder === "asc" || sortOrder === "desc") {
     filtered = filtered.slice().sort((a, b) => {
-      const av = typeof a.amount === "number" && !Number.isNaN(a.amount) ? a.amount : null;
-      const bv = typeof b.amount === "number" && !Number.isNaN(b.amount) ? b.amount : null;
+      const av =
+        typeof a.amount === "number" && !Number.isNaN(a.amount)
+          ? a.amount
+          : null;
+      const bv =
+        typeof b.amount === "number" && !Number.isNaN(b.amount)
+          ? b.amount
+          : null;
       // Records with no amount always sink to the bottom, regardless of direction.
       if (av === null && bv === null) return 0;
       if (av === null) return 1;
@@ -514,7 +552,9 @@ function updateStats(records) {
   dom.statHigh.textContent = highCount.toLocaleString("en-IN");
 
   const selected =
-    selectedRecordId !== null ? records.find((r) => r.id === selectedRecordId) : null;
+    selectedRecordId !== null
+      ? records.find((r) => r.id === selectedRecordId)
+      : null;
 
   if (selected) {
     dom.statAmountLabel.textContent = `Pending — ${selected.name}`;
@@ -528,12 +568,18 @@ function updateStats(records) {
 
   selectedRecordId = null;
   dom.statAmountLabel.textContent = "Total pending";
-  const hasAmounts = records.some((r) => typeof r.amount === "number" && !Number.isNaN(r.amount));
-  const totalAmount = records.reduce(
-    (sum, r) => sum + (typeof r.amount === "number" && !Number.isNaN(r.amount) ? r.amount : 0),
-    0
+  const hasAmounts = records.some(
+    (r) => typeof r.amount === "number" && !Number.isNaN(r.amount),
   );
-  dom.statAmount.textContent = hasAmounts ? `₹${totalAmount.toLocaleString("en-IN")}` : "—";
+  const totalAmount = records.reduce(
+    (sum, r) =>
+      sum +
+      (typeof r.amount === "number" && !Number.isNaN(r.amount) ? r.amount : 0),
+    0,
+  );
+  dom.statAmount.textContent = hasAmounts
+    ? `₹${totalAmount.toLocaleString("en-IN")}`
+    : "—";
   dom.statClear.hidden = true;
 }
 
@@ -614,7 +660,9 @@ function renderList(records, searchTerm) {
       selectRecord(r.id);
       const marker = currentMarkers[index];
       if (!marker) return;
-      map.flyTo([r.latitude, r.longitude], Math.max(map.getZoom(), 11), { duration: 0.6 });
+      map.flyTo([r.latitude, r.longitude], Math.max(map.getZoom(), 11), {
+        duration: 0.6,
+      });
       marker.openPopup();
     };
 
