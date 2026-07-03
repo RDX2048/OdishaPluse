@@ -1,0 +1,618 @@
+:root {
+  --ink: #0e1217;
+  --panel: #161b24;
+  --panel-2: #1e2530;
+  --line: #2a323f;
+  --line-soft: #232a35;
+  --text: #f4f6f9;
+  --mist: #8b93a5;
+  --mist-dim: #5e6677;
+
+  --teal: #34d1b4;
+  --amber: #f2a93b;
+  --crimson: #e8584f;
+
+  /* Arr_TOT severity scale: green (lowest quartile) through red (highest) */
+  --sev-green: #22c55e;
+  --sev-yellow: #facc15;
+  --sev-orange: var(--amber);
+  --sev-red: var(--crimson);
+
+  --teal-soft: rgba(52, 209, 180, 0.16);
+  --amber-soft: rgba(242, 169, 59, 0.16);
+  --crimson-soft: rgba(232, 88, 79, 0.18);
+
+  --radius-lg: 16px;
+  --radius: 10px;
+  --radius-sm: 7px;
+
+  --font-display: "Space Grotesk", sans-serif;
+  --font-body: "Inter", sans-serif;
+  --font-mono: "IBM Plex Mono", monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* Several components below (.upload-zone-inner, .upload-file-info,
+   .stats-row, .map-empty) set their own `display` value, which would
+   otherwise override the `hidden` attribute toggled from home.js.
+   This rule guarantees `hidden` always wins. */
+[hidden] {
+  display: none !important;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--ink);
+  color: var(--text);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+button {
+  font-family: inherit;
+}
+
+.app {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 24px 28px 48px;
+}
+
+/* ===================== TOP BAR ===================== */
+
+.topbar {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  padding-bottom: 22px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid var(--line);
+}
+
+.topbar-brand {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.topbar-brand span {
+  color: var(--amber);
+}
+
+.topbar-sub {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--mist);
+  margin: 0;
+  flex: 1;
+}
+
+.topbar-user {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--mist-dim);
+}
+
+.btn-ghost {
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--mist);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 8px 16px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.btn-ghost:hover {
+  border-color: var(--mist);
+  color: var(--text);
+}
+
+/* ===================== TOOLBAR ===================== */
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.toolbar .upload-zone {
+  flex: 2 1 340px;
+}
+
+.toolbar .filter-group {
+  flex: 1 1 200px;
+}
+
+.toolbar .filter-group--grow {
+  flex: 2 1 260px;
+}
+
+@media (max-width: 760px) {
+  .toolbar .upload-zone,
+  .toolbar .filter-group {
+    flex-basis: 100%;
+  }
+}
+
+.upload-zone {
+  position: relative;
+  border: 1.5px dashed var(--line);
+  border-radius: var(--radius);
+  background: var(--panel);
+  padding: 22px 24px;
+  transition: border-color 0.15s ease, background 0.15s ease;
+  cursor: pointer;
+}
+
+.upload-zone:hover {
+  border-color: var(--mist-dim);
+}
+
+.upload-zone.dragover {
+  border-color: var(--teal);
+  background: var(--teal-soft);
+}
+
+.upload-zone.has-error {
+  border-color: var(--crimson);
+  background: var(--crimson-soft);
+}
+
+.upload-zone-inner {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.upload-icon {
+  width: 28px;
+  height: 28px;
+  color: var(--teal);
+  flex-shrink: 0;
+}
+
+.upload-text {
+  margin: 0 0 4px;
+  font-size: 14px;
+  color: var(--text);
+}
+
+.upload-hint {
+  margin: 0;
+  font-size: 12.5px;
+  color: var(--mist);
+}
+
+.upload-file-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.upload-file-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.upload-filename {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.upload-note {
+  margin: 0;
+  font-size: 12px;
+  color: var(--mist);
+}
+
+.upload-note.is-error {
+  color: var(--crimson);
+}
+
+.link-inline {
+  background: none;
+  border: none;
+  color: var(--teal);
+  font-weight: 500;
+  cursor: pointer;
+  padding: 0;
+  font-size: inherit;
+}
+
+.link-inline:hover {
+  text-decoration: underline;
+}
+
+.filter-group {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 7px;
+}
+
+.filter-group label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--mist);
+}
+
+.filter-group select,
+.filter-group input[type="text"] {
+  width: 100%;
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 14px;
+  padding: 9px 12px;
+  border-radius: var(--radius-sm);
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.filter-group select {
+  appearance: none;
+  background-image: linear-gradient(45deg, transparent 50%, var(--mist) 50%),
+    linear-gradient(135deg, var(--mist) 50%, transparent 50%);
+  background-position: calc(100% - 16px) center, calc(100% - 11px) center;
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
+  cursor: pointer;
+}
+
+.filter-group input[type="text"]::placeholder {
+  color: var(--mist-dim);
+}
+
+.search-field {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-field input[type="text"] {
+  padding-right: 30px;
+}
+
+.search-clear {
+  position: absolute;
+  right: 8px;
+  background: none;
+  border: none;
+  color: var(--mist);
+  font-size: 12px;
+  cursor: pointer;
+  padding: 4px 6px;
+  line-height: 1;
+}
+
+.search-clear:hover {
+  color: var(--text);
+}
+
+.filter-group select:focus,
+.filter-group input[type="text"]:focus {
+  border-color: var(--teal);
+  box-shadow: 0 0 0 3px var(--teal-soft);
+}
+
+.filter-group select:disabled,
+.filter-group input[type="text"]:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ===================== STATS ===================== */
+
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+@media (max-width: 760px) {
+  .stats-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.stat-card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.stat-label {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.04em;
+  color: var(--mist);
+}
+
+.stat-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.stat-clear {
+  background: none;
+  border: none;
+  color: var(--teal);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  cursor: pointer;
+  padding: 0;
+}
+
+.stat-clear:hover {
+  text-decoration: underline;
+}
+
+.stat-value {
+  font-family: var(--font-display);
+  font-size: 26px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.stat-value--high {
+  color: var(--crimson);
+}
+
+/* ===================== MAP + LIST ===================== */
+
+.content-grid {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 18px;
+  align-items: start;
+}
+
+@media (max-width: 920px) {
+  .content-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.map-card {
+  position: relative;
+  background: var(--panel);
+  border: 1px solid var(--mist-dim);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  height: 560px;
+}
+
+#map {
+  width: 100%;
+  height: 100%;
+  background: var(--panel-2);
+}
+
+/* Subdue Leaflet's default light popup chrome to match the dark theme */
+.leaflet-popup-content-wrapper {
+  background: var(--panel-2);
+  color: var(--text);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-body);
+}
+
+.leaflet-popup-tip {
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+}
+
+.leaflet-popup-content {
+  margin: 12px 14px;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.leaflet-popup-content strong {
+  font-family: var(--font-display);
+  font-size: 14px;
+}
+
+.leaflet-container a.leaflet-popup-close-button {
+  color: var(--mist);
+}
+
+.leaflet-control-attribution {
+  background: rgba(14, 18, 23, 0.75) !important;
+  color: var(--mist-dim) !important;
+}
+
+.leaflet-control-attribution a {
+  color: var(--mist) !important;
+}
+
+.leaflet-control-zoom a {
+  background: var(--panel-2) !important;
+  color: var(--text) !important;
+  border-color: var(--line) !important;
+}
+
+.map-empty {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  margin: 0;
+  padding: 0 40px;
+  font-size: 14px;
+  color: var(--mist);
+  background: var(--panel);
+  z-index: 500;
+  pointer-events: none;
+}
+
+.map-legend {
+  position: absolute;
+  bottom: 14px;
+  left: 14px;
+  z-index: 500;
+  display: flex;
+  gap: 14px;
+  background: rgba(14, 18, 23, 0.78);
+  border: 1px solid var(--line);
+  backdrop-filter: blur(6px);
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  color: var(--mist);
+}
+
+.map-legend span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.dot--green {
+  background: var(--sev-green);
+}
+.dot--yellow {
+  background: var(--sev-yellow);
+}
+.dot--orange {
+  background: var(--sev-orange);
+}
+.dot--red {
+  background: var(--sev-red);
+}
+
+.list-card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  height: 560px;
+  display: flex;
+  flex-direction: column;
+  padding: 18px;
+}
+
+.list-card h2 {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 14px;
+}
+
+.list-scroll {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.list-empty {
+  color: var(--mist);
+  font-size: 13.5px;
+  margin: 0;
+}
+
+.list-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 8px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background 0.12s ease;
+}
+
+.list-row:hover {
+  background: var(--panel-2);
+}
+
+.list-row--selected {
+  background: var(--panel-2);
+  box-shadow: inset 3px 0 0 var(--teal);
+}
+
+.list-row .dot {
+  flex-shrink: 0;
+}
+
+.list-row-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.list-row-name {
+  font-size: 13.5px;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.list-row-region {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--mist);
+}
+
+.list-row-amount {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--text);
+  white-space: nowrap;
+}
+
+/* Scrollbar styling for the list panel */
+.list-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.list-scroll::-webkit-scrollbar-thumb {
+  background: var(--line);
+  border-radius: 999px;
+}
+
+/* Visible keyboard focus */
+.btn-ghost:focus-visible,
+.link-inline:focus-visible,
+.upload-zone:focus-visible,
+.list-row:focus-visible {
+  outline: 2px solid var(--teal);
+  outline-offset: 2px;
+}

@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OdishaPulse — Regional Collections Console</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap"
+    rel="stylesheet"/>
+
+  <link rel="stylesheet" href="login.css" />
+</head>
+<body>
+
+  <div class="page">
+
+    <!-- ===================== BRAND / VISUAL PANEL ===================== -->
+    <aside class="brand-panel">
+      <div class="heat-grid" id="heat-grid" aria-hidden="true"></div>
+      <div class="brand-overlay" aria-hidden="true"></div>
+
+      <!-- A few sample district chips sitting over the grid -->
+      <div class="chip chip--1"><span class="dot dot--high"></span>Ganjam <strong>31</strong></div>
+      <div class="chip chip--2"><span class="dot dot--mid"></span>Cuttack <strong>14</strong></div>
+      <div class="chip chip--3"><span class="dot dot--low"></span>Khordha <strong>4</strong></div>
+      <div class="chip chip--4"><span class="dot dot--high"></span>Balasore <strong>22</strong></div>
+
+      <div class="brand-content">
+        <p class="eyebrow">REGIONAL COLLECTIONS CONSOLE</p>
+        <h1 class="brand-name">Odisha<span>Pulse</span></h1>
+        <p class="brand-tag">
+          See which districts are falling behind on payments before it becomes a problem —
+          one live heat map, every region, every customer.
+        </p>
+
+        <ul class="legend">
+          <li><span class="dot dot--low"></span>Low pendings</li>
+          <li><span class="dot dot--mid"></span>Medium</li>
+          <li><span class="dot dot--high"></span>High pendings</li>
+        </ul>
+      </div>
+    </aside>
+
+    <!-- ===================== AUTH PANEL ===================== -->
+    <main class="auth-panel">
+      <div class="auth-card">
+
+        <div class="tabs" role="tablist" aria-label="Authentication">
+          <button type="button" class="tab tab--active" id="tab-login" role="tab" aria-selected="true">
+            Sign in
+          </button>
+          <button type="button" class="tab" id="tab-signup" role="tab" aria-selected="false">
+            Create account
+          </button>
+        </div>
+
+        <!-- ---------- LOGIN FORM ---------- -->
+        <form id="login-form" class="auth-form" novalidate>
+          <h2>Welcome back</h2>
+          <p class="sub">Sign in to view today's pending heat map.</p>
+
+          <div class="field">
+            <label for="login-email">Email</label>
+            <input
+              type="email"
+              id="login-email"
+              name="email"
+              placeholder="you@company.com"
+              autocomplete="email"
+              required
+            />
+            <span class="error" id="login-email-error"></span>
+          </div>
+
+          <div class="field">
+            <label for="login-password">Password</label>
+            <div class="password-field">
+              <input
+                type="password"
+                id="login-password"
+                name="password"
+                placeholder="Enter your password"
+                autocomplete="current-password"
+                required
+              />
+              <button type="button" class="toggle-visibility" data-target="login-password" aria-pressed="false">
+                Show
+              </button>
+            </div>
+            <span class="error" id="login-password-error"></span>
+          </div>
+
+          <div class="row-between">
+            <label class="checkbox">
+              <input type="checkbox" id="remember-me" />
+              Remember me
+            </label>
+            <span class="link-muted" style="cursor: not-allowed; opacity: 0.6;" title="Not available in demo mode">
+            Forgot password?
+            </span>
+          </div>
+
+          <button type="submit" class="btn-primary">Sign in</button>
+
+          <p class="form-footnote">
+            New to OdishaPulse?
+            <button type="button" class="link-inline" id="go-signup">Create an account</button>
+          </p>
+        </form>
+
+        <!-- ---------- SIGNUP FORM ---------- -->
+        <form id="signup-form" class="auth-form" novalidate hidden>
+          <h2>Create your account</h2>
+          <p class="sub">Get access to the regional collections dashboard.</p>
+
+          <div class="field">
+            <label for="signup-name">Full name</label>
+            <input type="text" id="signup-name" name="name" placeholder="Asha Patnaik" autocomplete="name" required />
+            <span class="error" id="signup-name-error"></span>
+          </div>
+
+          <div class="field">
+            <label for="signup-email">Work email</label>
+            <input
+              type="email"
+              id="signup-email"
+              name="email"
+              placeholder="you@company.com"
+              autocomplete="email"
+              required
+            />
+            <span class="error" id="signup-email-error"></span>
+          </div>
+
+          <div class="field">
+            <label for="signup-phone">Phone number <span class="optional">(optional)</span></label>
+            <input
+              type="tel"
+              id="signup-phone"
+              name="phone"
+              placeholder="98XXXXXXXX"
+              autocomplete="tel"
+              inputmode="numeric"
+            />
+            <span class="error" id="signup-phone-error"></span>
+          </div>
+
+          <div class="field">
+            <label for="signup-region">Primary region</label>
+            <select id="signup-region" name="region" required>
+              <option value="" disabled selected>Select a district</option>
+              <option>Angul</option>
+              <option>Balangir</option>
+              <option>Balasore</option>
+              <option>Bargarh</option>
+              <option>Bhadrak</option>
+              <option>Boudh</option>
+              <option>Cuttack</option>
+              <option>Deogarh</option>
+              <option>Dhenkanal</option>
+              <option>Gajapati</option>
+              <option>Ganjam</option>
+              <option>Jagatsinghpur</option>
+              <option>Jajpur</option>
+              <option>Jharsuguda</option>
+              <option>Kalahandi</option>
+              <option>Kandhamal</option>
+              <option>Kendrapara</option>
+              <option>Kendujhar</option>
+              <option>Khordha</option>
+              <option>Koraput</option>
+              <option>Malkangiri</option>
+              <option>Mayurbhanj</option>
+              <option>Nabarangpur</option>
+              <option>Nayagarh</option>
+              <option>Nuapada</option>
+              <option>Puri</option>
+              <option>Rayagada</option>
+              <option>Sambalpur</option>
+              <option>Subarnapur</option>
+              <option>Sundargarh</option>
+            </select>
+            <span class="error" id="signup-region-error"></span>
+          </div>
+
+          <div class="field">
+            <label for="signup-password">Password</label>
+            <div class="password-field">
+              <input
+                type="password"
+                id="signup-password"
+                name="password"
+                placeholder="At least 8 characters"
+                autocomplete="new-password"
+                required
+              />
+              <button type="button" class="toggle-visibility" data-target="signup-password" aria-pressed="false">
+                Show
+              </button>
+            </div>
+            <div class="strength-meter" id="strength-meter" aria-hidden="true">
+              <span></span>
+            </div>
+            <span class="error" id="signup-password-error"></span>
+          </div>
+
+          <div class="field">
+            <label for="signup-confirm">Confirm password</label>
+            <input
+              type="password"
+              id="signup-confirm"
+              name="confirm"
+              placeholder="Re-enter password"
+              autocomplete="new-password"
+              required
+            />
+            <span class="error" id="signup-confirm-error"></span>
+          </div>
+
+          <button type="submit" class="btn-primary">Create account</button>
+
+          <p class="form-footnote">
+            Already have an account?
+            <button type="button" class="link-inline" id="go-login">Sign in</button>
+          </p>
+        </form>
+
+        <div class="form-status" id="form-status" role="status" aria-live="polite"></div>
+      </div>
+    </main>
+
+  </div>
+
+  <script src="login.js"></script>
+</body>
+</html>

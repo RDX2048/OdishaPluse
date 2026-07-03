@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OdishaPulse — Dashboard</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- Leaflet (map rendering, no API key needed) -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+  <link rel="stylesheet" href="home.css" />
+</head>
+<body>
+
+  <div class="app">
+
+    <!-- ===================== TOP BAR ===================== -->
+    <header class="topbar">
+      <div class="topbar-brand">Odisha<span>Pulse</span></div>
+      <p class="topbar-sub">Regional Collections Console</p>
+      <span class="topbar-user" id="topbar-user"></span>
+      <button type="button" class="btn-ghost" id="signout-btn">Sign out</button>
+    </header>
+
+    <!-- ===================== TOOLBAR: upload + filter ===================== -->
+    <section class="toolbar">
+
+      <div class="upload-zone" id="upload-zone">
+        <input type="file" id="csv-input" accept=".csv" hidden />
+
+        <div class="upload-zone-inner" id="upload-zone-inner">
+          <svg class="upload-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M12 16V4M12 4L7 9M12 4l5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <p class="upload-text">
+            Drag &amp; drop your CSV, or
+            <button type="button" class="link-inline" id="browse-btn">browse files</button>
+          </p>
+          <p class="upload-hint">
+            Needs latitude &amp; longitude columns.
+            <button type="button" class="link-inline" id="sample-btn">Download sample CSV</button>
+          </p>
+        </div>
+
+        <div class="upload-file-info" id="upload-file-info" hidden>
+          <div class="upload-file-row">
+            <span class="upload-filename" id="upload-filename"></span>
+            <button type="button" class="link-inline" id="clear-file-btn">Remove</button>
+          </div>
+          <p class="upload-note" id="upload-note"></p>
+        </div>
+      </div>
+
+      <div class="filter-group filter-group--grow">
+        <label for="customer-search">Search customer</label>
+        <div class="search-field">
+          <input
+            type="text"
+            id="customer-search"
+            placeholder="Search by name…"
+            autocomplete="off"
+            disabled
+          />
+          <button type="button" class="search-clear" id="search-clear-btn" hidden aria-label="Clear search">
+            ✕
+          </button>
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <label for="region-filter">Region</label>
+        <select id="region-filter" disabled>
+          <option value="all">All regions</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label for="amount-sort">Sort by pending</label>
+        <select id="amount-sort" disabled>
+          <option value="none">Default order</option>
+          <option value="desc">High to low</option>
+          <option value="asc">Low to high</option>
+        </select>
+      </div>
+
+    </section>
+
+    <!-- ===================== STATS ===================== -->
+    <section class="stats-row" id="stats-row" hidden>
+      <div class="stat-card">
+        <span class="stat-label">Customers plotted</span>
+        <span class="stat-value" id="stat-total">0</span>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-head">
+          <span class="stat-label" id="stat-amount-label">Total pending</span>
+          <button type="button" class="stat-clear" id="stat-clear-btn" hidden>Clear</button>
+        </div>
+        <span class="stat-value" id="stat-amount">—</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">High-risk accounts</span>
+        <span class="stat-value stat-value--high" id="stat-high">0</span>
+      </div>
+    </section>
+
+    <!-- ===================== MAP + LIST ===================== -->
+    <section class="content-grid">
+
+      <div class="map-card">
+        <div id="map"></div>
+
+        <p class="map-empty" id="map-empty">Upload a CSV to plot customer locations on the map.</p>
+
+        <div class="map-legend">
+          <span><i class="dot dot--green"></i>Green</span>
+          <span><i class="dot dot--yellow"></i>Yellow</span>
+          <span><i class="dot dot--orange"></i>Orange</span>
+          <span><i class="dot dot--red"></i>Red</span>
+        </div>
+      </div>
+
+      <aside class="list-card">
+        <h2>Customers</h2>
+        <div class="list-scroll" id="customer-list">
+          <p class="list-empty" id="list-empty">No data yet — upload a CSV to get started.</p>
+        </div>
+      </aside>
+
+    </section>
+
+  </div>
+
+  <!-- Leaflet for the map -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <!-- PapaParse for robust CSV parsing (quoted fields, headers, etc.) -->
+  <script src="https://unpkg.com/papaparse@5.4.1/papaparse.min.js"></script>
+
+  <script src="home.js"></script>
+</body>
+</html>
